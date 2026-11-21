@@ -66,8 +66,8 @@ const TOOLS = [
     articleParagraph1: "Whether you are building a single-file web tool on your phone or debugging a script, breaking a big feature into small prompts gives much cleaner code than asking for an entire app at once.",
     articleParagraph2: "Test changes one step at a time, check mobile layout responsiveness, and keep working backups before major edits.",
     url: "https://chat.deepseek.com/"
-  }
-    {
+  },
+  {
     id: "canva-design",
     name: "Canva",
     featured: true,
