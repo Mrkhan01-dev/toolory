@@ -270,6 +270,64 @@
     updateSavedCounter();
     renderCategoryButtons();
     renderDirectory();
+      (function initTooloryHashJump() {
+    function readHashTarget() {
+      return decodeURIComponent((window.location.hash || "").replace(/^#/, "")).trim();
+    }
+
+    function openCardForHash(id) {
+      if (!id) return false;
+
+      const card =
+        document.getElementById(id) ||
+        document.querySelector(`[data-id="${CSS.escape(id)}"]`) ||
+        document.querySelector(`[data-tool-id="${CSS.escape(id)}"]`);
+
+      if (!card) return false;
+
+      const toggleBtn = card.matches("button, [aria-expanded]")
+        ? card
+        : card.querySelector(
+            "button[aria-expanded], [data-toggle], [data-action='toggle'], .guide-toggle, .expand-btn, .card-toggle"
+          );
+
+      const alreadyOpen =
+        card.classList.contains("open") ||
+        card.classList.contains("expanded") ||
+        card.classList.contains("active") ||
+        (toggleBtn && toggleBtn.getAttribute("aria-expanded") === "true");
+
+      if (!alreadyOpen) {
+        if (toggleBtn && typeof toggleBtn.click === "function") {
+          toggleBtn.click();
+        } else if (typeof card.click === "function" && !(card.tagName === "A" && card.href && !card.href.includes("#"))) {
+          card.click();
+        }
+      }
+
+      setTimeout(() => {
+        const offset = 84;
+        const targetY = card.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
+      }, 90);
+
+      return true;
+    }
+
+    function jumpWhenReady(retries = 12) {
+      const id = readHashTarget();
+      if (!id) return;
+      if (openCardForHash(id)) return;
+      if (retries > 0) {
+        setTimeout(() => jumpWhenReady(retries - 1), 120);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => jumpWhenReady(12));
+    window.addEventListener("load", () => jumpWhenReady(8));
+    window.addEventListener("hashchange", () => jumpWhenReady(6));
+  })();
+    
   </script>
 </body>
 </html>
